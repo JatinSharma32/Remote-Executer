@@ -605,8 +605,31 @@ const data = [
 
 export const QuestionsList = (req, res, next) => {
     try {
-        const { page } = req.query;
-        res.status(200).json({ data: data.slice(0, Number.parseInt(page)) });
+        // pageSet will have the previous request's last page's index
+        const { size, pageSet } = req.query;
+        // validation
+        // there may be possible error in this condition for array indexing
+        if (Number.parseInt(pageSet) + Number.parseInt(size) > data.length) {
+            console.log("if");
+            res.status(200).json({
+                data: data.slice(
+                    data.length - size,
+                    Number.parseInt(data.length)
+                ),
+                end: true,
+                lastIndex: Number.parseInt(data.length),
+            });
+        } else {
+            console.log("else");
+            res.status(200).json({
+                data: data.slice(
+                    pageSet,
+                    Number.parseInt(pageSet) + Number.parseInt(size)
+                ),
+                end: false,
+                lastIndex: Number.parseInt(pageSet) + Number.parseInt(size),
+            });
+        }
     } catch (error) {
         errorHandler(res, error);
     }
