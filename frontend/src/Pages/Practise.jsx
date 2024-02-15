@@ -1,7 +1,7 @@
 import { useSearchParams } from "react-router-dom";
 import {
     FilterButton,
-    NextPageButton,
+    ChangePageButton,
 } from "../components/PracticePageButtons";
 import QuestionRow from "../components/QuestionRow";
 import Axios from "axios";
@@ -26,21 +26,34 @@ const Practise = () => {
             }&pageSet=${searchParams.get("pageSet") || 0}`,
         }).then((data) => {
             setQuestions(data.data.data);
-            console.log(data.data.data);
         });
     }, [searchParams]);
 
     return (
         <div className="flex flex-col h-full">
             <div className="text-gray-500  font-medium text-2xl flex flex-shrink-0 flex-grow-0 items-center justify-start my-2 py-2">
-                <FilterButton size={100}>Large Page</FilterButton>
-                <FilterButton size={40}>Medium Page</FilterButton>
-                <FilterButton size={10}>Small Page</FilterButton>
-                <FilterButton size={10}>Next Page</FilterButton>
+                <FilterButton
+                    size={50}
+                    pageSet={searchParams.get("pageSet") ?? 0}
+                >
+                    Large Page
+                </FilterButton>
+                <FilterButton
+                    size={25}
+                    pageSet={searchParams.get("pageSet") ?? 0}
+                >
+                    Medium Page
+                </FilterButton>
+                <FilterButton
+                    size={10}
+                    pageSet={searchParams.get("pageSet") ?? 0}
+                >
+                    Small Page
+                </FilterButton>
             </div>
             <div className="text-gray-500  font-medium text-2xl flex flex-shrink-0 flex-grow-0 justify-center my-2 py-2">
                 <h2 className=" text-gray-500 w-full font-medium text-xl flex flex-col">
-                    Questio
+                    Questions
                 </h2>
             </div>
             <div className="flex flex-col w-full flex-shrink-0 flex-grow items-center justify-start my-2 py-2">
@@ -87,6 +100,23 @@ const Practise = () => {
                     </tbody>
                     {/* how to manage the Column width */}
                 </table>
+            </div>
+            <div className="text-gray-500  font-medium text-2xl flex flex-shrink-0 flex-grow-0 items-center justify-between my-2 py-2">
+                {/* pageSet is the last index of pervious request, if null then 0 will be set */}
+                <ChangePageButton
+                    size={searchParams.get("size") ?? 10}
+                    pageSet={searchParams.get("pageSet") ?? 0}
+                    move={"backward"}
+                >
+                    Previous Page
+                </ChangePageButton>
+                <ChangePageButton
+                    size={searchParams.get("size") ?? 10}
+                    pageSet={searchParams.get("pageSet") ?? 0}
+                    move={"forward"}
+                >
+                    Next Page
+                </ChangePageButton>
             </div>
         </div>
     );
