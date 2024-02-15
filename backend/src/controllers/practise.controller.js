@@ -610,24 +610,21 @@ export const QuestionsList = (req, res, next) => {
         // validation
         // there may be possible error in this condition for array indexing
         if (Number.parseInt(pageSet) + Number.parseInt(size) > data.length) {
-            console.log("if");
             res.status(200).json({
                 data: data.slice(
                     data.length - size,
                     Number.parseInt(data.length)
                 ),
                 end: true,
-                lastIndex: Number.parseInt(data.length),
             });
         } else {
-            console.log("else");
+            // we are supposed to save the data in DB and but due to complexity in pagination we will call all data at once from DB in backas end as it starts.
             res.status(200).json({
                 data: data.slice(
                     pageSet,
                     Number.parseInt(pageSet) + Number.parseInt(size)
                 ),
                 end: false,
-                lastIndex: Number.parseInt(pageSet) + Number.parseInt(size),
             });
         }
     } catch (error) {

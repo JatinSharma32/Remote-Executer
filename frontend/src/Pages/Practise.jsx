@@ -18,36 +18,41 @@ Object.freeze(Diffculity);
 const Practise = () => {
     const [searchParams] = useSearchParams();
     const [questions, setQuestions] = useState(null);
+    const [dataEnd, setDataEnd] = useState(false);
 
+    function validateSize(size) {
+        const parsedSize = parseInt(size);
+        return !isNaN(parsedSize) && parsedSize > 0 ? parsedSize : 10;
+    }
+    function validatePageSet(pageSet) {
+        const parsedPageSet = parseInt(pageSet);
+        return !isNaN(parsedPageSet) && parsedPageSet >= 0 ? parsedPageSet : 0;
+    }
     useEffect(() => {
         Axios({
-            url: `http://localhost:4000/practise?size=${
-                searchParams.get("size") || 10
-            }&pageSet=${searchParams.get("pageSet") || 0}`,
+            url: `http://localhost:4000/practise?size=${validateSize(
+                searchParams.get("size")
+            )}&pageSet=${validatePageSet(searchParams.get("pageSet"))}`,
         }).then((data) => {
             setQuestions(data.data.data);
+            if (data.data.end) {
+                setDataEnd(true);
+            } else {
+                setDataEnd(false);
+            }
         });
     }, [searchParams]);
 
     return (
         <div className="flex flex-col h-full">
             <div className="text-gray-500  font-medium text-2xl flex flex-shrink-0 flex-grow-0 items-center justify-start my-2 py-2">
-                <FilterButton
-                    size={50}
-                    pageSet={searchParams.get("pageSet") ?? 0}
-                >
+                <FilterButton size={50} pageSet={searchParams.get("pageSet")}>
                     Large Page
                 </FilterButton>
-                <FilterButton
-                    size={25}
-                    pageSet={searchParams.get("pageSet") ?? 0}
-                >
+                <FilterButton size={25} pageSet={searchParams.get("pageSet")}>
                     Medium Page
                 </FilterButton>
-                <FilterButton
-                    size={10}
-                    pageSet={searchParams.get("pageSet") ?? 0}
-                >
+                <FilterButton size={10} pageSet={searchParams.get("pageSet")}>
                     Small Page
                 </FilterButton>
             </div>
@@ -82,7 +87,7 @@ const Practise = () => {
                     </thead>
                     <tbody className="text-black font-normal text-sm">
                         {/* Try adding shimmer effect to the questions */}
-                        {questions &&
+                        {questions && questions.length > 0 ? (
                             questions.map((data, i) => {
                                 const diffculity = {
                                     text: data.diffculity,
@@ -93,10 +98,20 @@ const Practise = () => {
                                         key={i}
                                         diffculity={diffculity}
                                         data={data}
-                                        index={i}
+                                        index={
+                                            i +
+                                            parseInt(
+                                                searchParams.get("pageSet")
+                                            )
+                                        }
                                     />
                                 );
-                            })}
+                            })
+                        ) : (
+                            <div className="flex w-full items-center justify-center text-lg">
+                                No data
+                            </div>
+                        )}
                     </tbody>
                     {/* how to manage the Column width */}
                 </table>
@@ -104,19 +119,21 @@ const Practise = () => {
             <div className="text-gray-500  font-medium text-2xl flex flex-shrink-0 flex-grow-0 items-center justify-between my-2 py-2">
                 {/* pageSet is the last index of pervious request, if null then 0 will be set */}
                 <ChangePageButton
-                    size={searchParams.get("size") ?? 10}
-                    pageSet={searchParams.get("pageSet") ?? 0}
+                    size={searchParams.get("size")}
+                    pageSet={searchParams.get("pageSet")}
                     move={"backward"}
                 >
                     Previous Page
                 </ChangePageButton>
-                <ChangePageButton
-                    size={searchParams.get("size") ?? 10}
-                    pageSet={searchParams.get("pageSet") ?? 0}
-                    move={"forward"}
-                >
-                    Next Page
-                </ChangePageButton>
+                {!dataEnd && (
+                    <ChangePageButton
+                        size={searchParams.get("size")}
+                        pageSet={searchParams.get("pageSet")}
+                        move={"forward"}
+                    >
+                        Next Page
+                    </ChangePageButton>
+                )}
             </div>
         </div>
     );
