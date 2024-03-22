@@ -84,7 +84,7 @@ const CoursePage = () => {
                 </div>
             ) : (
                 <div className="loader">
-                    <img src="./public/Design.png" alt="Remote Executer Logo" />
+                    <img src="/Design.png" alt="Remote Executer Logo" />
                 </div>
             )}
         </div>
