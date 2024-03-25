@@ -32,15 +32,12 @@ const codeExecutor = async (code) => {
         );
 
         //executing the file
-        exec(
-            `cd ../UserCodeFiles && node ${fileName}`,
-            (err, stdout, stderr) => {
-                if (err) {
-                    throw err;
-                }
-                console.log("Output: ", stdout);
+        exec(`cd ../UserCodeFiles && node ${fileName}`, (err, stdout) => {
+            if (err) {
+                throw err;
             }
-        );
+            console.log("Output: ", stdout);
+        });
     } catch (error) {
         throw createError(error.message, 500);
     }

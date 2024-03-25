@@ -9,7 +9,7 @@
 
 ## Where I left last time:
 
--   Shifted **Problem, Courses & Home** database to backend, and added API on frontend
+-   Designed the functionality of code execution move forward with it
 
 ---
 

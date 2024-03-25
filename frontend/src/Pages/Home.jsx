@@ -64,7 +64,7 @@ const Home = () => {
                         return <Courses key={i} course={item} />;
                     })
                 ) : (
-                    <div className="loader">
+                    <div className="contentloader">
                         <img src="/Design.png" alt="Remote Executer Logo" />
                     </div>
                 )}
